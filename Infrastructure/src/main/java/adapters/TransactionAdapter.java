@@ -23,7 +23,7 @@ public class TransactionAdapter implements TransactionPersistencePort {
 
     @Override
     public void save(Transaction transaction) {
-        Account account = AccountMapper.accountDTOToAccount(accountPersistencePort.findById(transaction.getAccountId()).get());
+        Account account = AccountMapper.accountDTOToAccount(accountPersistencePort.findById(transaction.accountId()).get());
         transactionDAO.save(TransactionMapper.transactionDTOtoTransaction(transaction,account));
 
     }
@@ -38,5 +38,10 @@ public class TransactionAdapter implements TransactionPersistencePort {
     @Override
     public Optional<Transaction> findById(long id) {
         return Optional.of(TransactionMapper.transactionToTransactionDTO(transactionDAO.findById(id).get()));
+    }
+
+    @Override
+    public List<Transaction> findByAccountId(long id) {
+        return transactionDAO.findByAccountId(id);
     }
 }

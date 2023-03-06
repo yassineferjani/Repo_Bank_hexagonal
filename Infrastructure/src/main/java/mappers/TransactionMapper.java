@@ -6,13 +6,8 @@ import entities.Transaction;
 public class TransactionMapper {
 
     public static Transaction transactionDTOtoTransaction(models.Transaction transaction, Account account){
-        return Transaction.builder()
-                .id(transaction.getId())
-                .type(transaction.getType())
-                .account(account)
-                .dateTime(transaction.getDateTime())
-                .amount(transaction.getAmount())
-                .build();
+        return new  Transaction(transaction.id(),
+                transaction.amount(),transaction.type(),transaction.dateTime(), account);
     }
 
     public static models.Transaction transactionToTransactionDTO(Transaction transaction){

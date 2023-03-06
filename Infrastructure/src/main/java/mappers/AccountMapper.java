@@ -2,21 +2,19 @@ package mappers;
 
 import entities.Account;
 
+import java.util.Collections;
+
 public class AccountMapper {
 
     public static Account accountDTOToAccount(models.Account account){
 
-        return Account.builder()
-                .type(account.getType())
-                .id(account.getId())
-                .build();
+        return new Account(account.id(), account.type(), Collections.emptyList());
     }
 
     public static models.Account accountToAccountDTO(Account account){
-
         return models.Account.builder()
-                .type(account.getType())
                 .id(account.getId())
+                .type(account.getType())
                 .build();
     }
 }
