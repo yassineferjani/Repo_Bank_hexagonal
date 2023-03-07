@@ -1,6 +1,7 @@
 package services;
 
 import api.TransactionServicePort;
+import exception.AccountNotFoundException;
 import exception.TransactionNotFoundException;
 import models.Transaction;
 import models.TransactionType;
@@ -40,7 +41,8 @@ public class TransactionServiceImp implements TransactionServicePort {
     @Override
     public Transaction getById(long id){
 
-        return transactionPersistencePort.findById(id).orElseThrow(TransactionNotFoundException::new);
+        return transactionPersistencePort.findById(id)
+                .orElseThrow(()->new TransactionNotFoundException("Transaction not exist "+id));
     }
 
     public MonetaryAmount calcBalance(Transaction transaction) {
@@ -67,6 +69,43 @@ public class TransactionServiceImp implements TransactionServicePort {
 
     public record TransactionWithBalance(OffsetDateTime dateTime,  MonetaryAmount amount,MonetaryAmount balance) {
 
+
+
+        public static TransactionWithBalanceBuilder builder() {
+            return new TransactionWithBalanceBuilder();
+        }
+
+        public static class TransactionWithBalanceBuilder {
+            private OffsetDateTime dateTime;
+            private MonetaryAmount amount;
+            private MonetaryAmount balance;
+
+            TransactionWithBalanceBuilder() {
+            }
+
+            public TransactionWithBalanceBuilder dateTime(OffsetDateTime dateTime) {
+                this.dateTime = dateTime;
+                return this;
+            }
+
+            public TransactionWithBalanceBuilder amount(MonetaryAmount amount) {
+                this.amount = amount;
+                return this;
+            }
+
+            public TransactionWithBalanceBuilder balance(MonetaryAmount balance) {
+                this.balance = balance;
+                return this;
+            }
+
+            public TransactionWithBalance build() {
+                return new TransactionWithBalance(dateTime, amount, balance);
+            }
+
+            public String toString() {
+                return "TransactionServiceImp.TransactionWithBalance.TransactionWithBalanceBuilder(dateTime=" + this.dateTime + ", amount=" + this.amount + ", balance=" + this.balance + ")";
+            }
+        }
     }
 
 

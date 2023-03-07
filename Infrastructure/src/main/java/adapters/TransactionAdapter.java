@@ -22,10 +22,10 @@ public class TransactionAdapter implements TransactionPersistencePort {
     }
 
     @Override
-    public void save(Transaction transaction) {
+    public Transaction save(Transaction transaction) {
         Account account = AccountMapper.accountDTOToAccount(accountPersistencePort.findById(transaction.accountId()).get());
         transactionDAO.save(TransactionMapper.transactionDTOtoTransaction(transaction,account));
-
+        return transaction;
     }
 
     @Override

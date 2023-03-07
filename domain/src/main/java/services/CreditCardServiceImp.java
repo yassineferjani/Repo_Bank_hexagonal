@@ -35,7 +35,7 @@ public class CreditCardServiceImp implements CreditCardServicePort {
 
 
     @Override
-    public void withdrawal(long rib, MonetaryAmount amount) {
+    public TransactionServiceImp.TransactionWithBalance withdrawal(long rib, MonetaryAmount amount) {
         if (accountServicePort.getById(rib) == null)
             throw new AccountNotFoundException("Account not found");
         if (transactionServicePort.getBalance(rib).isLessThan(amount))
@@ -48,10 +48,15 @@ public class CreditCardServiceImp implements CreditCardServicePort {
                 .type(TransactionType.Withdrawal)
                 .build();
         transactionPersistencePort.save(transaction);
+        return TransactionServiceImp.TransactionWithBalance.builder()
+                .amount(amount)
+                .balance(transactionServicePort.getBalance(rib))
+                .dateTime(OffsetDateTime.now(clock))
+                .build();
     }
 
     @Override
-    public void deposit(long rib, MonetaryAmount amount) {
+    public TransactionServiceImp.TransactionWithBalance deposit(long rib, MonetaryAmount amount) {
         if (accountServicePort.getById(rib) == null)
             throw new AccountNotFoundException("Account not found");
         transactionPersistencePort.save(Transaction.builder()
@@ -60,10 +65,15 @@ public class CreditCardServiceImp implements CreditCardServicePort {
                 .dateTime(OffsetDateTime.now(clock))
                 .type(TransactionType.Deposit)
                 .build());
+        return TransactionServiceImp.TransactionWithBalance.builder()
+                .amount(amount)
+                .balance(transactionServicePort.getBalance(rib))
+                .dateTime(OffsetDateTime.now(clock))
+                .build();
     }
     @Override
     public void deleteById(long id) {
-        Transaction transaction = transactionPersistencePort.findById(id).orElseThrow(TransactionNotFoundException::new);
+        Transaction transaction = transactionPersistencePort.findById(id).orElseThrow(()->new TransactionNotFoundException("Transaction not exist "+id));
         if (transaction.type() == TransactionType.Deposit)
             withdrawal(transaction.accountId(), transaction.amount());
         else

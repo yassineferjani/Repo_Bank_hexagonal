@@ -18,11 +18,11 @@ public class AccountServiceImp implements AccountServicePort {
 
     @Override
     public Account getById(long rib){
-        return accountPersistencePort.findById(rib).orElseThrow(AccountNotFoundException::new);
+        return accountPersistencePort.findById(rib).orElseThrow(()->new AccountNotFoundException("Account not exist "+rib));
     }
     @Override
-    public void add (Account account){
-        accountPersistencePort.save(account);
+    public Account add (Account account){
+        return accountPersistencePort.save(account);
     }
     @Override
     public void deleteById(long rib){
@@ -30,9 +30,8 @@ public class AccountServiceImp implements AccountServicePort {
     }
 
     @Override
-    public void update(Account account) {
-        accountPersistencePort.save(account);
-
+    public Account update(Account account) {
+        return accountPersistencePort.save(account);
     }
     @Override
     public List<Account> getAll(){

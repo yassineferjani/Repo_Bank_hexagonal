@@ -1,9 +1,11 @@
 package api;
 
+import services.TransactionServiceImp;
+
 import javax.money.MonetaryAmount;
 
 public interface CreditCardServicePort {
-    void withdrawal(long rib, MonetaryAmount amount);
-    void deposit(long rib, MonetaryAmount amount);
+    TransactionServiceImp.TransactionWithBalance withdrawal(long rib, MonetaryAmount amount);
+    TransactionServiceImp.TransactionWithBalance deposit(long rib, MonetaryAmount amount);
     void deleteById(long id);
 }

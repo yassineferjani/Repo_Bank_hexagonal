@@ -12,59 +12,65 @@ import javax.money.MonetaryAmount;
 import java.util.List;
 
 @RestController
-@RequestMapping("transaction")
+@RequestMapping("transaction/")
 public class TransactionController {
-    private  TransactionServicePort transactionServicePort;
-    private  CreditCardServicePort creditCardServicePort;
+    private final TransactionServicePort transactionServicePort;
+    private final CreditCardServicePort creditCardServicePort;
 
-    public TransactionController( TransactionServicePort transactionServicePort,
-                                 CreditCardServicePort creditCardServicePort) {
+    public TransactionController( final TransactionServicePort transactionServicePort,
+                                final CreditCardServicePort creditCardServicePort) {
         this.transactionServicePort = transactionServicePort;
         this.creditCardServicePort = creditCardServicePort;
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Transaction>> getAll (){
-        return new ResponseEntity<>(transactionServicePort.getAll(), HttpStatus.OK);
+    @GetMapping("all")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Transaction> getAll (){
+        return transactionServicePort.getAll();
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<Transaction> getById(@RequestParam("id") long id){
-        return new ResponseEntity<>(transactionServicePort.getById(id),HttpStatus.OK);
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public Transaction getById(@RequestParam("id") long id){
+        return transactionServicePort.getById(id);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<Transaction>> getByAccountId(@RequestParam("rib") long rib){
-        return new ResponseEntity<>(transactionServicePort.findByAccountId(rib),HttpStatus.OK);
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<Transaction> getByAccountId(@RequestParam("rib") long rib){
+        return transactionServicePort.findByAccountId(rib);
     }
 
     @GetMapping("/balance")
-    public ResponseEntity<MonetaryAmount> getBalance(@RequestParam("rib") long rib) {
-        return new ResponseEntity<>(transactionServicePort.getBalance(rib),HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public MonetaryAmount getBalance(@RequestParam("rib") long rib) {
+        return transactionServicePort.getBalance(rib);
     }
 
     @GetMapping("statement")
-    public ResponseEntity<List<TransactionServiceImp.TransactionWithBalance>> getStatement(@RequestParam("rib") long rib){
-        return new ResponseEntity<>(transactionServicePort.getTransactionsWithBalance(rib),HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public List<TransactionServiceImp.TransactionWithBalance> getStatement(@RequestParam("rib") long rib){
+        return transactionServicePort.getTransactionsWithBalance(rib);
     }
 
     @PostMapping("/withdrawal")
-    public ResponseEntity withdrawal(@RequestParam("rib") long rib,
-                                     @RequestParam("amount") MonetaryAmount amount){
-        creditCardServicePort.withdrawal(rib,amount);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.OK)
+    public TransactionServiceImp.TransactionWithBalance withdrawal(@RequestParam("rib") long rib,
+                                                                   @RequestParam("amount") MonetaryAmount amount){
+       return creditCardServicePort.withdrawal(rib,amount);
+
     }
 
     @PostMapping("/deposit")
-    public ResponseEntity deposit(@RequestParam("rib") long rib,
-                                     @RequestParam("amount") MonetaryAmount amount){
-        creditCardServicePort.deposit(rib,amount);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.OK)
+    public TransactionServiceImp.TransactionWithBalance deposit(@RequestParam("rib") long rib,
+                                                                @RequestParam("amount") MonetaryAmount amount){
+        return creditCardServicePort.deposit(rib,amount);
     }
 
     @PostMapping("/delete")
-    public ResponseEntity delete(@RequestParam("id") long id){
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@RequestParam("id") long id){
         creditCardServicePort.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }

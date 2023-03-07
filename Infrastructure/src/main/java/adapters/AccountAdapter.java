@@ -17,8 +17,9 @@ public class AccountAdapter implements AccountPersistencePort {
     }
 
     @Override
-    public void save(Account account) {
+    public Account save(Account account) {
         accountDAO.save(AccountMapper.accountDTOToAccount(account));
+        return account;
     }
 
     @Override
@@ -39,8 +40,9 @@ public class AccountAdapter implements AccountPersistencePort {
     }
 
     @Override
-    public void update(Account account) {
+    public Account update(Account account) {
         accountDAO.save(AccountMapper.accountDTOToAccount(account));
+        return account;
 
     }
 }
