@@ -1,6 +1,7 @@
 package controllers;
 
 import api.AccountServicePort;
+import exception.AccountNotFoundException;
 import models.Account;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -31,10 +32,10 @@ public class AccountController {
         return accountServicePort.getAll();
     }
 
-    @GetMapping
+    @GetMapping("{rib}")
     @ResponseStatus(HttpStatus.OK)
-    public Account getById(@RequestParam("rib") long rib){
-        return accountServicePort.getById(rib);
+    public Account getById(@PathVariable long rib){
+        return accountServicePort.getById(rib).orElseThrow(()->new AccountNotFoundException("Account not found"+rib));
     }
 
     @DeleteMapping

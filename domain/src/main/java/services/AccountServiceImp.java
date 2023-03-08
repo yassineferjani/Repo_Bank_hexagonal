@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import spi.AccountPersistencePort;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AccountServiceImp implements AccountServicePort {
@@ -17,8 +18,8 @@ public class AccountServiceImp implements AccountServicePort {
     }
 
     @Override
-    public Account getById(long rib){
-        return accountPersistencePort.findById(rib).orElseThrow(()->new AccountNotFoundException("Account not exist "+rib));
+    public Optional<Account> getById(long rib){
+        return Optional.of(accountPersistencePort.findById(rib).orElseThrow(() -> new AccountNotFoundException("Account not exist " + rib)));
     }
     @Override
     public Account add (Account account){
