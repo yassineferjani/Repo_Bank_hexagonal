@@ -12,7 +12,18 @@ plugins {
     id 'org.springframework.boot' version '2.6.3'
 
 }
+/*apply {
+    plugin("java")
+    plugin("org.springframework.boot")
+    plugin("io.spring.dependency-management")
+    plugin("com.diffplug.spotless")
+}*/
 
+configurations {
+    compileOnly {
+        extendsFrom configurations.annotationProcessor
+    }
+}
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
@@ -23,32 +34,19 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
     implementation 'org.springframework.boot:spring-boot-starter:2.7.4'
 
-    // This dependency is used by the application.
-    implementation 'com.google.guava:guava:31.1-jre'
-    implementation 'org.springframework.boot:spring-boot-starter-web:2.7.4'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.7.4'
-    implementation 'com.h2database:h2:1.4.200'
+
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.12'
    // implementation 'io.springfox:springfox-boot-starter:3.0.0'
-
-    implementation project(':domain')
-    implementation project(':infrastructure')
-    implementation project(':web')
-}
-bootJar {
-    enabled = true
-}
-bootRun {
-    systemProperties = System.properties
+    testImplementation("org.springframework.boot:spring-boot-starter-test:2.7.4")
 }
 
+/*spotless {
+    java {
+        googleJavaFormat("1.15.0")
+    }
+}*/
 
-application {
-    // Define the main class for the application.
-    mainClass = 'bank.App'
-}
-
-tasks.named('test') {
-    // Use JUnit Platform for unit tests.
+test {
     useJUnitPlatform()
 }
+

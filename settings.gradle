@@ -9,7 +9,7 @@
 
 rootProject.name = 'bank'
 include('app')
-include 'domain'
-include 'infrastructure'
-include 'web'
+include ('domain')
+include ('infrastructure')
+include ('web')
 

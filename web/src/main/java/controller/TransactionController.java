@@ -1,10 +1,9 @@
-package controllers;
+package controller;
 
 import api.CreditCardServicePort;
 import api.TransactionServicePort;
 import models.Transaction;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import services.TransactionServiceImp;
 
